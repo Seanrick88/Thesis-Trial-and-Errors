@@ -24,15 +24,18 @@ fonts = [
     "calibri.ttf",
     "couri.ttf"
 ]
-#randomizer keme keme
-font_path = random.choice(fonts)
 
-# Load the font
-try:
-    font = ImageFont.truetype(font_path, 32)
-except OSError:
-    print("Font not found!")
-    font = ImageFont.load_default()
+sizes = [
+    12,
+    16,
+    18,
+    20,
+    22,
+    24,
+    28,
+    30,
+    36
+]
 
 # Image dimensions and font size
 image_size = (300, 100)  # (width, height)
@@ -48,6 +51,17 @@ with open(csv_file_path, mode='w', newline='', encoding='utf-8') as file:
     for i in range(num_samples):
         # Randomly select a word or phrase
         text = random.choice(words_with_enye)
+
+        #randomizer keme keme
+        font_path = random.choice(fonts)
+        font_size = random.choice(sizes)
+        # Load the font
+        try:
+            font = ImageFont.truetype(font_path, font_size)
+        except OSError:
+            print("Font not found!")
+            font = ImageFont.load_default()
+
         
         # Create a blank white image
         img = Image.new("RGB", image_size, color=(255, 255, 255))
