@@ -40,6 +40,29 @@ sizes = [
 # Image dimensions and font size
 image_size = (300, 100)  # (width, height)
 
+# Background types
+background_types = ["plain", "textured", "noisy"]
+
+def create_textured_background(image_size):
+    """Generate a textured background."""
+    texture = Image.new("RGB", image_size, color=(200, 200, 200))  # Light gray background
+    draw = ImageDraw.Draw(texture)
+    for _ in range(100):  # Add random lines as texture
+        x1, y1 = random.randint(0, image_size[0]), random.randint(0, image_size[1])
+        x2, y2 = random.randint(0, image_size[0]), random.randint(0, image_size[1])
+        draw.line((x1, y1, x2, y2), fill=(150, 150, 150), width=1)
+    return texture
+
+def create_noisy_background(image_size):
+    """Generate a noisy background."""
+    noise = Image.new("RGB", image_size, color=(255, 255, 255))
+    pixels = noise.load()
+    for x in range(image_size[0]):
+        for y in range(image_size[1]):
+            noise_value = random.randint(200, 255)
+            pixels[x, y] = (noise_value, noise_value, noise_value)
+    return noise
+
 # Create and open a CSV file for storing image paths and labels
 csv_file_path = os.path.join(output_dir, "image_labels.csv")
 with open(csv_file_path, mode='w', newline='', encoding='utf-8') as file:
@@ -63,8 +86,15 @@ with open(csv_file_path, mode='w', newline='', encoding='utf-8') as file:
             font = ImageFont.load_default()
 
         
-        # Create a blank white image
-        img = Image.new("RGB", image_size, color=(255, 255, 255))
+        # Create a background image
+        background_type = random.choice(background_types)
+        if background_type == "plain":
+            img = Image.new("RGB", image_size, color=(255, 255, 255))  # Plain white
+        elif background_type == "textured":
+            img = create_textured_background(image_size)
+        elif background_type == "noisy":
+            img = create_noisy_background(image_size)
+
         draw = ImageDraw.Draw(img)
         
         # Calculate text position (center the text)
